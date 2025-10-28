@@ -55,6 +55,10 @@ header{
   padding: 10px;
 }
 
+.mt-10{
+  margin-top: 10px;
+}
+
 .flex-div{
   display: flex;
   flex-direction: column;
@@ -105,4 +109,19 @@ img{
   .wrapper-70 {
     width: 70%;
   }
+}
+
+.active-link button{
+  border: 2px solid #ffffff;  
+}
+
+.btn-xl{
+  padding: 5px;
+  padding-left: 40px;
+  padding-right: 40px;
+  background-color: #1f1f1f;
+}
+
+.btn-xl p{
+  font-size: 30px;
 }

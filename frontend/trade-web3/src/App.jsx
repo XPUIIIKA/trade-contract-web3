@@ -1,10 +1,10 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import Layout from "./сomponents/Layout";
-import Customer from "./сomponents/Customer";
-import Seller from "./сomponents/Seller";
-import NotFound from "./сomponents/NotFound";
-import Home from "./сomponents/Home";
+import Customer from "./pages/Customer";
+import Seller from "./pages/Seller";
+import NotFound from "./pages/NotFound";
+import Home from "./pages/Home";
 
 function App() {
   return (
@@ -13,8 +13,8 @@ function App() {
         <Route index element={<Home />} />
         <Route path="seller" element={<Seller />} />
         <Route path="customer" element={<Customer />} />
+        <Route path="*" element={<NotFound />} />
       </Route>
-      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

@@ -1,33 +1,47 @@
-import { Outlet, useNavigate } from "react-router-dom"
+import { NavLink, Outlet } from "react-router-dom";
 
 function Layout() {
-  const navigate = useNavigate();
-
-  const homeBtnHandler = () => {
-    navigate("/");
-  }
-  const sellerBtnHandler = () => {
-    navigate("/seller");
-  }
-  const customerBtnHandler = () => {
-    navigate("/customer");
-  }
   return (
     <div className="container">
       <header className="div">
-        <button onClick={sellerBtnHandler}>
-          <p>Home</p>
-        </button>
-        <button onClick={sellerBtnHandler}>
-          <p>Seller</p>
-        </button>
-        <button onClick={customerBtnHandler}>
-          <p>Customer</p>
-        </button>
+        <nav>
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive ? "nav-link active-link" : "nav-link"
+            }
+          >
+            <button>
+              <p>Home</p>
+            </button>
+          </NavLink>
+
+          <NavLink
+            to="/seller"
+            className={({ isActive }) =>
+              isActive ? "nav-link active-link" : "nav-link"
+            }
+          >
+            <button>
+              <p>Seller</p>
+            </button>
+          </NavLink>
+
+          <NavLink
+            to="/customer"
+            className={({ isActive }) =>
+              isActive ? "nav-link active-link" : "nav-link"
+            }
+          >
+            <button>
+              <p>Customer</p>
+            </button>
+          </NavLink>
+        </nav>
       </header>
       <Outlet />
     </div>
-  )
+  );
 }
 
-export default Layout
+export default Layout;
