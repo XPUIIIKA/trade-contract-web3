@@ -14,8 +14,8 @@ function Layout() {
   }
   return (
     <div className="container">
-      <header>
-        <button onClick={homeBtnHandler}>
+      <header className="div">
+        <button onClick={sellerBtnHandler}>
           <p>Home</p>
         </button>
         <button onClick={sellerBtnHandler}>

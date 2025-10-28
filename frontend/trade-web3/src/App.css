@@ -44,14 +44,21 @@ header{
   justify-content: flex-start;
   align-items: center;
   flex-direction: row;
-  width: 100%;
   gap: 10px;
+  padding-left: 20px;
+}
+
+.div{
   background-color: #1f1f1f;
   border: 1px solid #383838;
   border-radius: 15px;
   padding: 10px;
-  padding-left: 20px;
+}
 
+.flex-div{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 header button{
@@ -67,4 +74,35 @@ header p {
 p{
   padding: 0px;
   margin: 0px;
+}
+
+img{
+  height: 200px;
+}
+
+.container{
+/* На мобильных устройствах элемент занимает всю ширину */
+  width: 100%;
+  padding: 20px;
+  flex-grow: 1;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .container {
+    width: 60%;
+    padding: 0px;
+    flex-grow: 1;
+    margin: 0 auto; 
+  }
+}
+
+.wrapper-70{
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .wrapper-70 {
+    width: 70%;
+  }
 }
