@@ -7,6 +7,19 @@
   text-align: center;
 }
 
+/* 1. Для Chrome, Safari, Edge (WebKit) */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* 2. Для Internet Explorer */
+input[type=number]::-ms-clear,
+input[type=number]::-ms-reveal {
+  display: none;
+}
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -119,9 +132,58 @@ img{
   padding: 5px;
   padding-left: 40px;
   padding-right: 40px;
+  background-color: transparent;
   background-color: #1f1f1f;
+  border: 1px solid #383838;
+  border-radius: 15px;
 }
 
 .btn-xl p{
   font-size: 30px;
+}
+
+input {
+  height: 30px;
+  padding-left: 5px ;
+  border-radius: 15px;
+}
+
+form{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.Ready{
+  color: greenyellow;
+}
+
+.OrderCreated{
+  color: orange;
+}
+
+.OrderPaid{
+  color: aqua;
+}
+
+.Shipment{
+  color: #55bbfe;
+}
+
+.product-div{
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  border-bottom: 1px solid #383838;
+  border-top: 1px solid #383838;
+}
+
+.w-80{
+  width: 80%;
+}
+
+.rightElem{
+  margin-left: auto;
+  margin-right: 10px;
 }

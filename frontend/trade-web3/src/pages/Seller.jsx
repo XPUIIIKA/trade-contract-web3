@@ -1,13 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CONTRACT_ABI, BYTECODE } from "../../config";
 import Web3 from "web3";
+import SellerForm from "../сomponents/SellerForm";
+import ProductList from "../сomponents/ProductList";
 
 function Seller() {
   const [contractAddress, setContractAddress] = useState("");
   const [account, setAccount] = useState("");
-
+  const [status, setStatus] = useState("");
+  const [products, setProducts] = useState([]);
+  const [deposit, setDeposit] = useState("");
 
   const deployContract = async () => {
+    if (contractAddress != "") return;
+
     if (!window.ethereum) {
       alert("MetaMask not found");
       return;
@@ -15,7 +21,9 @@ function Seller() {
 
     // Подключаем MetaMask
     const web3 = new Web3(window.ethereum);
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
     const seller = accounts[0];
     setAccount(seller);
 
@@ -30,26 +38,96 @@ function Seller() {
         })
         .send({
           from: seller,
-          value: web3.utils.toWei("0.1", "ether"), // страховой депозит
+          value: web3.utils.toWei(deposit, "ether"), // страховой депозит
           gas: 4000000,
         });
 
-      console.log("The contract was created at the address:", deployedContract.options.address);
+      console.log(
+        "The contract was created at the address:",
+        deployedContract.options.address
+      );
       setContractAddress(deployedContract.options.address);
     } catch (error) {
       console.error("Error deploying contract:", error);
     }
   };
 
+  const getContractState = async () => {
+    if (!window.ethereum || !contractAddress) return;
+
+    const web3 = new Web3(window.ethereum);
+    const contract = new web3.eth.Contract(CONTRACT_ABI, contractAddress);
+
+    try {
+      const stateValue = await contract.methods.state().call();
+      const states = ["Ready", "OrderCreated", "OrderPaid", "Shipment"];
+      setStatus(states[stateValue]);
+    } catch (err) {
+      console.error("Error getting state:", err);
+      setStatus("");
+    }
+  };
+
+  const getProducts = async () => {
+    if (!window.ethereum || !contractAddress) return;
+
+    const web3 = new Web3(window.ethereum);
+    const contract = new web3.eth.Contract(CONTRACT_ABI, contractAddress);
+
+    try {
+      const products = JSON.parse(await contract.methods.getProducts().call());
+      console.log(products);
+      setProducts(products);
+    } catch (err) {
+      console.error("Error getting products:", err);
+      setProducts([]);
+    }
+  };
+
+  useEffect(() => {
+    getContractState();
+    const interval = setInterval(getContractState, 5000);
+    return () => clearInterval(interval);
+  }, [contractAddress]);
 
   return (
     <div className="div flex-div mt-10">
-      <p>Account: {account? account : "haven't an account yet"}</p>
-      <button className="btn-xl" onClick={deployContract}>
-        <p>Start</p>
-      </button>
+      <p>Account addres: {account ? account : "haven't an account yet"}</p>
+      <p>
+        Contract addres:{" "}
+        {contractAddress ? contractAddress : "haven't a contract yet"}
+      </p>
+      <p className={status}>
+        Status: {status ? status : "I don't know ¯\\_(ツ)_/¯"}
+      </p>
+      {contractAddress ? (
+        status == "Ready" ? (
+          <SellerForm
+            status={status}
+            contractAddress={contractAddress}
+            getProducts={getProducts}
+          />
+        ) : null
+      ) : (
+        <>
+          <input
+            type="number"
+            min="0"
+            placeholder="Enter the deposit amount:"
+            value={deposit}
+            className="mt-10"
+            onChange={(e) => {
+              setDeposit(e.target.value);
+            }}
+          />
+          <button className="btn-xl mt-10" onClick={deployContract}>
+            <p>Start</p>
+          </button>
+        </>
+      )}
+      {products.length >= 1 && <ProductList products={products} />}
     </div>
-  )
+  );
 }
 
-export default Seller
+export default Seller;
