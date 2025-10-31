@@ -3,17 +3,24 @@ import { CONTRACT_ABI, BYTECODE } from "../../config";
 import Web3 from "web3";
 import SellerForm from "../сomponents/SellerForm";
 import ProductList from "../сomponents/ProductList";
+import { useDispatch, useSelector } from "react-redux";
+import { setContractAddress, setSeller, setStatus, setProducts } from "../contractSlice";
 
 function Seller() {
-  const [contractAddress, setContractAddress] = useState("");
-  const [account, setAccount] = useState("");
-  const [status, setStatus] = useState("");
-  const [products, setProducts] = useState([]);
+  const dispatch = useDispatch();
+  const contractAddress = useSelector((s) => s.contract.address);
+  const sellerAccount = useSelector((s) => s.contract.seller);
+  const status = useSelector((s) => s.contract.status);
+  const products = useSelector((s) => s.contract.products);
   const [deposit, setDeposit] = useState("");
 
   const deployContract = async () => {
-    if (contractAddress != "") return;
+    if (contractAddress) return;
 
+    if (!deposit || Number(deposit) <= 0) {
+      alert("Deposit is required");
+      return;
+    }
     if (!window.ethereum) {
       alert("MetaMask not found");
       return;
@@ -25,7 +32,7 @@ function Seller() {
       method: "eth_requestAccounts",
     });
     const seller = accounts[0];
-    setAccount(seller);
+    dispatch(setSeller(seller));
 
     // Создаём экземпляр контракта
     const contract = new web3.eth.Contract(CONTRACT_ABI);
@@ -46,7 +53,7 @@ function Seller() {
         "The contract was created at the address:",
         deployedContract.options.address
       );
-      setContractAddress(deployedContract.options.address);
+      dispatch(setContractAddress(deployedContract.options.address));
     } catch (error) {
       console.error("Error deploying contract:", error);
     }
@@ -61,10 +68,10 @@ function Seller() {
     try {
       const stateValue = await contract.methods.state().call();
       const states = ["Ready", "OrderCreated", "OrderPaid", "Shipment"];
-      setStatus(states[stateValue]);
+      dispatch(setStatus(states[stateValue]));
     } catch (err) {
       console.error("Error getting state:", err);
-      setStatus("");
+      dispatch(setStatus(""));
     }
   };
 
@@ -77,10 +84,10 @@ function Seller() {
     try {
       const products = JSON.parse(await contract.methods.getProducts().call());
       console.log(products);
-      setProducts(products);
+      dispatch(setProducts(products));
     } catch (err) {
       console.error("Error getting products:", err);
-      setProducts([]);
+      dispatch(setProducts([]));
     }
   };
 
@@ -92,7 +99,7 @@ function Seller() {
 
   return (
     <div className="div flex-div mt-10">
-      <p>Account addres: {account ? account : "haven't an account yet"}</p>
+      <p>Account addres: {sellerAccount ? sellerAccount : "haven't an account yet"}</p>
       <p>
         Contract addres:{" "}
         {contractAddress ? contractAddress : "haven't a contract yet"}
