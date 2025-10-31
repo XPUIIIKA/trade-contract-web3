@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { CONTRACT_ABI } from "../../config";
 import Web3 from "web3";
+import { useSelector } from "react-redux";
 
-function SellerForm({ status, contractAddress, getProducts}) {
+function SellerForm({contractAddress, getProducts}) {
+  const status = useSelector((s) => s.contract.status);
+  const customer = useSelector((s) => s.contract.customer);
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
 
@@ -22,6 +25,11 @@ function SellerForm({ status, contractAddress, getProducts}) {
     if (!contractAddress) return;
 
     if (status != "Ready") return;
+
+    if (customer){
+      alert("You are customer!");
+      return;
+    }
 
     const web3 = new Web3(window.ethereum);
 

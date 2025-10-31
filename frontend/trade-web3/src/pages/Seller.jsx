@@ -4,7 +4,12 @@ import Web3 from "web3";
 import SellerForm from "../сomponents/SellerForm";
 import ProductList from "../сomponents/ProductList";
 import { useDispatch, useSelector } from "react-redux";
-import { setContractAddress, setSeller, setStatus, setProducts } from "../contractSlice";
+import {
+  setContractAddress,
+  setSeller,
+  setStatus,
+  setProducts,
+} from "../contractSlice";
 
 function Seller() {
   const dispatch = useDispatch();
@@ -12,6 +17,7 @@ function Seller() {
   const sellerAccount = useSelector((s) => s.contract.seller);
   const status = useSelector((s) => s.contract.status);
   const products = useSelector((s) => s.contract.products);
+  const customerAccount = useSelector((s) => s.contract.customer);
   const [deposit, setDeposit] = useState("");
 
   const deployContract = async () => {
@@ -97,9 +103,19 @@ function Seller() {
     return () => clearInterval(interval);
   }, [contractAddress]);
 
+  if (customerAccount)
+    return (
+      <div className="div flex-div mt-10">
+        <p>You are customer!</p>
+      </div>
+    );
+
   return (
     <div className="div flex-div mt-10">
-      <p>Account addres: {sellerAccount ? sellerAccount : "haven't an account yet"}</p>
+      <p>
+        Account addres:{" "}
+        {sellerAccount ? sellerAccount : "haven't an account yet"}
+      </p>
       <p>
         Contract addres:{" "}
         {contractAddress ? contractAddress : "haven't a contract yet"}
@@ -110,7 +126,6 @@ function Seller() {
       {contractAddress ? (
         status == "Ready" ? (
           <SellerForm
-            status={status}
             contractAddress={contractAddress}
             getProducts={getProducts}
           />
