@@ -1,4 +1,4 @@
-import img from "../assets/Hi.webp";
+import img from "../assets/hi.webp";
 
 function Home() {
   return (
