@@ -20,6 +20,26 @@ function Seller() {
   const customerAccount = useSelector((s) => s.contract.customer);
   const [deposit, setDeposit] = useState("");
 
+  const renderDeployForm = () => {
+    return (
+      <>
+        <input
+          type="number"
+          min="0"
+          placeholder="Enter deposit (ETH):"
+          value={deposit}
+          className="mt-10"
+          onChange={(e) => {
+            setDeposit(e.target.value);
+          }}
+        />
+        <button className="btn-xl mt-10" onClick={deployContract}>
+          <p>Start</p>
+        </button>
+      </>
+    );
+  };
+
   const deployContract = async () => {
     if (contractAddress) return;
 
@@ -120,33 +140,21 @@ function Seller() {
         Contract addres:{" "}
         {contractAddress ? contractAddress : "haven't a contract yet"}
       </p>
-      <p className={status}>
-        Status: {status ? status : "I don't know ¯\\_(ツ)_/¯"}
-      </p>
-      {contractAddress ? (
-        status == "Ready" ? (
-          <SellerForm
-            contractAddress={contractAddress}
-            getProducts={getProducts}
-          />
-        ) : null
-      ) : (
-        <>
-          <input
-            type="number"
-            min="0"
-            placeholder="Enter the deposit amount:"
-            value={deposit}
-            className="mt-10"
-            onChange={(e) => {
-              setDeposit(e.target.value);
-            }}
-          />
-          <button className="btn-xl mt-10" onClick={deployContract}>
-            <p>Start</p>
-          </button>
-        </>
+      <p className={status}>Status: {status}</p>
+
+      {/*Если contractAddress НЕ существует,отображаем форму подключения.*/}
+
+      {!contractAddress && renderDeployForm()}
+
+      {/*Если статус "Ready", отображаем форму продавца.*/}
+
+      {status === "Ready" && (
+        <SellerForm
+          contractAddress={contractAddress}
+          getProducts={getProducts}
+        />
       )}
+
       {products.length >= 1 && <ProductList products={products} />}
     </div>
   );

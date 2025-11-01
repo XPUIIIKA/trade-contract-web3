@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   contractAddress: "",
-  status: "",
+  status: "I don't know ¯\\_(ツ)_/¯",
   products: [],
   seller: "",
   customer: "",
