@@ -56,9 +56,10 @@ export function OrderForm() {
     }
 
     const productOrderedPrice = searchPrice(productOrderedName);
+    const currentAddress = (await getAccounts())[0]
 
     dispatch(
-      await setOrderedProduct({
+      setOrderedProduct({
         product: productOrderedName,
         price: productOrderedPrice,
       })
@@ -66,7 +67,7 @@ export function OrderForm() {
 
     createOrder(
       contractAddress,
-      (await getAccounts())[0],
+      currentAddress,
       orderedProduct.product
     );
 
