@@ -10,7 +10,7 @@ export const isSeller = async (address) => {
   const sellerAddress = await contract.methods.seller().call();
 
   const [currentAddress] = await getAccounts();
-  
+
   return currentAddress.toLowerCase() === sellerAddress.toLowerCase();
 };
 
@@ -92,5 +92,19 @@ export const createOrder = async (address, customer, product) => {
 export const payOrder = async (address, customer, toPay) => {
   const web3 = getWeb3();
   const contract = await getContract(address);
-  return await contract.methods.payOrder().send({ from: customer, value: web3.utils.toWei(toPay, "wei")});
-}
+  return await contract.methods
+    .payOrder()
+    .send({ from: customer, value: web3.utils.toWei(toPay, "wei") });
+};
+
+export const confirmPayment = async (address, seller) => {
+  const web3 = getWeb3();
+  const contract = await getContract(address);
+  return await contract.methods.confirmPayment().send({ from: seller });
+};
+
+export const orderCompleted = async (address, seller) => {
+  const web3 = getWeb3();
+  const contract = await getContract(address);
+  return await contract.methods.orderCompleted().send({ from: seller });
+};

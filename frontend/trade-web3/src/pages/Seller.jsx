@@ -3,6 +3,7 @@ import { ProductList } from "../сomponents/ProductList";
 import { useSelector } from "react-redux";
 import { DeployForm } from "../сomponents/Seller/DeployForm";
 import { useContractWatcher } from "../hooks/useContract";
+import { ConfirmPayment } from "../сomponents/Seller/ConfirmPayment";
 
 function Seller() {
   const contractAddress = useSelector((s) => s.contract.contractAddress);
@@ -31,6 +32,11 @@ function Seller() {
       {/*Если статус "Ready", отображаем форму продавца.*/}
 
       {status === "Ready" && <SellerForm contractAddress={contractAddress} />}
+
+      {/*Если статус "OrderPaid", отображаем форму подтверждения оплаты.*/}
+      
+      {status === "OrderPaid" && <ConfirmPayment/>}
+
       {/*Если статус "products" больше равен 1 елементу, отображаем список продуктов.*/}
 
       {products.length >= 1 && <ProductList products={products} />}

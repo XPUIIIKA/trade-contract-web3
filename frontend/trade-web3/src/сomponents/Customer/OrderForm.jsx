@@ -71,7 +71,7 @@ export function OrderForm() {
       orderedProduct.product
     );
 
-    dispatch(await setStatus(await fetchStatus(contractAddress)));
+    dispatch(setStatus(await fetchStatus(contractAddress)));
   };
 
   return (
