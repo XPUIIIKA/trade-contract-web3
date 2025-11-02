@@ -1,64 +1,34 @@
 import { useState } from "react";
-import { CONTRACT_ABI } from "../../config";
-import Web3 from "web3";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addProduct, fetchProducts } from "../../repositoryes/web3Repository";
+import { setProducts } from "../../redux/contractSlice";
 
-function SellerForm({contractAddress, getProducts}) {
+function SellerForm() {
+  const dispatch = useDispatch();
+  const contractAddress = useSelector((s) => s.contract.contractAddress);
   const status = useSelector((s) => s.contract.status);
-  const customer = useSelector((s) => s.contract.customer);
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
 
   const priceBtnHandler = (e) => {
     e.preventDefault();
-
     if (e.target.value < 0) return;
-
     setPrice(e.target.value);
   };
 
   const submitBtnHandler = async (e) => {
     e.preventDefault();
-
     if (!window.ethereum) return;
 
     if (!contractAddress) return;
 
     if (status != "Ready") return;
 
-    if (customer){
-      alert("You are customer!");
-      return;
-    }
+    await addProduct(contractAddress, name, price);
 
-    const web3 = new Web3(window.ethereum);
-
-    const contract = new web3.eth.Contract(CONTRACT_ABI, contractAddress);
-
-    const sellerAddress = await contract.methods.seller().call();
-
-    const accounts = await window.ethereum.request({
-      method: "eth_requestAccounts",
-    });
-    const current = accounts[0];
-
-    if (current.toLowerCase() !== sellerAddress.toLowerCase()) {
-      alert("You aren't a seller!");
-      return;
-    }
-
-    try {
-      const tx = await contract.methods
-        .createProducts(name, web3.utils.toWei(price, "wei"))
-        .send({ from: current, gas: 300000 });
-
-      console.log("Transaction complete:", tx);
-      getProducts();
-      setName("");
-      setPrice("");
-    } catch (err) {
-      console.error("Error adding product:", err);
-    }
+    dispatch(setProducts(await fetchProducts(contractAddress)));
+    setName("");
+    setPrice("");
   };
 
   return (

@@ -3,6 +3,6 @@ import contractReducer from "./contractSlice";
 
 export const store = configureStore({
   reducer: {
-    contract: contractReducer
-  }
+    contract: contractReducer,
+  },
 });

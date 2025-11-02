@@ -6,7 +6,8 @@ const initialState = {
   products: [],
   seller: "",
   customer: "",
-  loading: false
+  loading: false,
+  orderedProduct: { product: "", price: 0 },
 };
 
 const contractSlice = createSlice({
@@ -14,7 +15,7 @@ const contractSlice = createSlice({
   initialState,
   reducers: {
     setContractAddress(state, action) {
-      state.address = action.payload;
+      state.contractAddress = action.payload;
     },
     setStatus(state, action) {
       state.status = action.payload;
@@ -30,8 +31,12 @@ const contractSlice = createSlice({
     },
     setLoading(state, action) {
       state.loading = action.payload;
-    }
-  }
+    },
+    setOrderedProduct(state, action) {
+      state.orderedProduct.product = action.payload.product;
+      state.orderedProduct.price = action.payload.price;
+    },
+  },
 });
 
 export const {
@@ -40,7 +45,8 @@ export const {
   setProducts,
   setSeller,
   setCustomer,
-  setLoading
+  setLoading,
+  setOrderedProduct,
 } = contractSlice.actions;
 
 export default contractSlice.reducer;
